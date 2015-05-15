@@ -23,17 +23,7 @@ RUN apt-get install -y \
     wget \
     subversion \
     openjdk-7-jdk \
-    mysql-client \
-    mysql-server \
     unzip
-
-# Install Postgresql
-ADD ./install-postgres.sh /tmp/
-RUN sh /tmp/install-postgres.sh
-
-# Install Postgis
-ADD ./install-postgis.sh /tmp/
-RUN sh /tmp/install-postgis.sh
 
 # Get the GDAL source
 ADD ./gdal-checkout.txt /tmp/gdal-checkout.txt
@@ -48,19 +38,12 @@ RUN sh /tmp/install-gdal-deps.sh
 ADD ./install-gdal.sh /tmp/
 RUN sh /tmp/install-gdal.sh
 
-# Run the tests
-ADD ./test-gdal.sh /tmp/
-RUN sh /tmp/test-gdal.sh
-
 # Clean up APT when done.
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Externally accessible data is by default put in /data
 WORKDIR /data
 VOLUME ["/data"]
-
-# Execute the gdal utilities as nobody, not root
-USER nobody
 
 # Output version and capabilities by default.
 CMD gdalinfo --version && gdalinfo --formats && ogrinfo --formats

@@ -14,10 +14,6 @@ die() {
 # Install test dependencies.
 apt-get install -y sqlite3 || die
 
-# Start the required services
-service postgresql start || die
-service mysql start || die
-
 # Change to the correct directory.
 cd /tmp/gdal/gdal || die
 
@@ -65,7 +61,3 @@ wget --no-verbose http://s3.amazonaws.com/etc-data.koordinates.com/gdal-travisci
 tar xzf libspatialite4.0dev_ubuntu12.04-64bit_srs_stripped.tar.gz || die
 ln -s install-libspatialite-4.0dev/lib/libspatialite.so.5.0.1 libspatialite.so.3 || die
 LD_LIBRARY_PATH=$PWD python ogr_sqlite.py || die
-
-# Stop previously started services.
-service mysql stop
-service postgresql stop
